@@ -1,0 +1,15 @@
+{
+    "cSpell.enabled": true,
+    "cSpell.language": "en,es",
+    "cSpell.words": [
+        "dotnet",
+        "Doxify",
+        "nunit",
+        "preconfiguradas",
+        "Pseudocódigo"
+    ],
+    "dotnet.defaultSolution": "RunasDices.sln",
+    "github.copilot.enable": {
+        "*": false
+    }
+}

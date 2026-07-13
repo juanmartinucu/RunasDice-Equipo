@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Debug Program",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build Program",
+            "program": "${workspaceFolder}/src/Program/bin/Debug/net8.0/Program.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Program",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": true
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}

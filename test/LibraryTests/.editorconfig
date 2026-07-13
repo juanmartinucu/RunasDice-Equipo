@@ -1,0 +1,5 @@
+# Configuración para los casos de prueba
+root = false
+
+[*.cs]
+dotnet_diagnostic.CA1707.severity = none
