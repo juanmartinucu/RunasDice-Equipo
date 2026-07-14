@@ -17,7 +17,7 @@ Este documento describe el proyecto del curso de **Programación II** del segund
 semestre de 2026.
 
 El proyecto consistirá en implementar un bot de [Discord](https://discord.com)
-para jugar un juego de cartas y datos llamado **Runas & Dices**.
+para jugar un juego de cartas y dados llamado **Runas & Dices**.
 
 Además de la consigna en este documento, lee estos otros, que también son parte
 de la consigna:

@@ -44,17 +44,10 @@ namespace Ucu.Poo.RunasDices.Commands
             {
                 string userName = this.GetDisplayName();
 
-                try
-                {
-                    Facade.Instance.AddUserToWaitingList(userName);
-                    await ReplyAsync(
-                        PlayCommandMessages.UserAddedToWaitingList(userName))
-                        .ConfigureAwait(false);
-                }
-                catch (InvalidOperationException exception)
-                {
-                    await ReplyAsync(exception.Message).ConfigureAwait(false);
-                }
+                Facade.Instance.AddUserToWaitingList(userName);
+                await ReplyAsync(
+                    PlayCommandMessages.UserAddedToWaitingList(userName))
+                    .ConfigureAwait(false);
 
                 return;
             }
@@ -79,17 +72,20 @@ namespace Ucu.Poo.RunasDices.Commands
                 string userName = this.GetDisplayName();
                 string opponentName = this.GetDisplayName(opponentId);
 
-                Facade.Instance.StartGame(userName, opponentName);
+                Result<Game> result = Facade.Instance.StartGame(userName, opponentName);
 
-                await ReplyAsync(
-                    PlayCommandMessages.GameStarted(opponentName))
-                    .ConfigureAwait(false);
+                if (result.IsSuccess)
+                {
+                    await ReplyAsync(
+                        PlayCommandMessages.GameStarted(opponentName))
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await ReplyAsync(result.Errors).ConfigureAwait(false);
+                }
             }
             catch (ArgumentException exception)
-            {
-                await ReplyAsync(exception.Message).ConfigureAwait(false);
-            }
-            catch (InvalidOperationException exception)
             {
                 await ReplyAsync(exception.Message).ConfigureAwait(false);
             }

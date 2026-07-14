@@ -79,5 +79,56 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                     Is.EqualTo(PlayCommandMessages.GameStarted(opponentUser)));
             }
         }
+
+        [Test]
+        public async Task ExecuteAsync_WithOpponentParameter_WhenOpponentIsNotWaiting_SendsFacadeErrorMessage()
+        {
+            // Arrange
+            CommandMock
+                .Protected()
+                .Setup<string>("GetDisplayName", opponentUser)
+                .Returns(opponentUser);
+
+            // Act
+            await CommandMock.Object.ExecuteAsync(opponentUser);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Facade.Instance.UserIsWaiting(SendingUser).Value, Is.False);
+                Assert.That(Facade.Instance.UserIsWaiting(opponentUser).Value, Is.False);
+                Assert.That(Reply, Is.Not.Null);
+                Assert.That(
+                    Reply,
+                    Is.EqualTo(FacadeMessages.OpponentIsNotWaiting(opponentUser)));
+            }
+        }
+
+        [Test]
+        public async Task ExecuteAsync_WithOpponentParameter_WhenGetDisplayNameThrowsArgumentException_SendsExceptionMessage()
+        {
+            // Arrange
+            
+            // Configura el mock para que GetDisplayName dispare la excepción
+            // ArgumentException con el mensaje a continuación.
+            const string errorMessage = "Nombre de usuario inválido";
+
+            CommandMock
+                .Protected()
+                .Setup<string>("GetDisplayName", opponentUser)
+                .Throws(new System.ArgumentException(errorMessage));
+
+            // Act
+            await CommandMock.Object.ExecuteAsync(opponentUser);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Facade.Instance.UserIsWaiting(SendingUser).Value, Is.False);
+                Assert.That(Facade.Instance.UserIsWaiting(opponentUser).Value, Is.False);
+                Assert.That(Reply, Is.Not.Null);
+                Assert.That(Reply, Is.EqualTo(errorMessage));
+            }
+        }
     }
 }
