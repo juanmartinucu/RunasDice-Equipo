@@ -40,7 +40,7 @@ namespace Ucu.Poo.RunasDices.Commands
                 if (!exists)
                 {
                     await ReplyAsync(
-                        $"No encuentro el usuario '{displayName}' en esta aplicación")
+                        UserInfoCommandMessages.UserNotFound(displayName))
                         .ConfigureAwait(false);
 
                     return;
@@ -51,14 +51,18 @@ namespace Ucu.Poo.RunasDices.Commands
                 displayName ?? this.GetDisplayName();
 
             var result = Facade.Instance.GetUserInfo(userName);
-            if (result.IsSuccess)
-            {
-                await ReplyAsync(result.Value).ConfigureAwait(false);
-            }
-            else
-            {
-                await ReplyAsync(result.Errors).ConfigureAwait(false);
-            }
+            await ReplyAsync(result).ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    /// Esta clase contiene todos los mensajes retornados por <see
+    /// cref="UserInfoCommand"/>.
+    /// </summary>
+    public static class UserInfoCommandMessages
+    {
+        /// <summary>Usuario agregado a la lista de espera.</summary>
+        public static string UserNotFound(string displayName) =>
+            $"No encuentro el usuario '{displayName}' en esta aplicación";
     }
 }

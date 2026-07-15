@@ -1,5 +1,0 @@
-# Configuración para código del bot
-root = false
-
-[*.cs]
-dotnet_diagnostic.CA1031.severity = none

@@ -2,11 +2,14 @@
     "cSpell.enabled": true,
     "cSpell.language": "en,es",
     "cSpell.words": [
+        "buildtransitive",
+        "contentfiles",
         "dotnet",
         "Doxify",
+        "msbuild",
         "nunit",
-        "preconfiguradas",
-        "Pseudocódigo"
+        "stylecop",
+        "waitlist"
     ],
     "dotnet.defaultSolution": "RunasDices.sln",
     "github.copilot.enable": {

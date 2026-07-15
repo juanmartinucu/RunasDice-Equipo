@@ -70,7 +70,10 @@ namespace Ucu.Poo.RunasDices.Domain
 
         /// <summary>
         /// Devuelve información del usuario cuyo nombre de usuario se recibe
-        /// como parámetro.
+        /// como parámetro. A diferencia de otros métodos, que retornan una
+        /// instancia de <see cref="Result"/>, este método retorna una string
+        /// porque no es posible que haya un error durante la ejecución del
+        /// método.
         /// </summary>
         /// <param name="userName">El nombre de usuario del usuario.
         /// </param>
@@ -80,8 +83,11 @@ namespace Ucu.Poo.RunasDices.Domain
         /// </returns>
         /// <exception cref="ArgumentException">Cuando <paramref name="userName"/>
         /// es <c>null</c>, vacío o contiene solo espacios en blanco.</exception>
-        public Result<string> GetUserInfo(string userName)
+        public string GetUserInfo(string userName)
         {
+            ArgumentException.ThrowIfNullOrEmpty(userName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(userName);
+
             string result;
 
             bool created = this.usersRepository.Find(userName) == null;
@@ -99,7 +105,7 @@ namespace Ucu.Poo.RunasDices.Domain
                 result = FacadeMessages.UserCanPlay(userName);
             }
 
-            return Result.Success<string>(result);
+            return result;
         }
 
         // Crea un usuario si no existe y lo retorna; en caso contrario retorna
@@ -179,18 +185,20 @@ namespace Ucu.Poo.RunasDices.Domain
         }
 
         /// <summary>
-        /// Obtiene la lista actual de usuarios esperando por un oponente.
+        /// Obtiene la lista actual de usuarios esperando por un oponente. A
+        /// diferencia de otros métodos, que retornan una instancia de <see
+        /// cref="Result"/>, este método retorna una lista de strings porque no
+        /// es posible que haya un error durante la ejecución del método.
         /// </summary>
-        /// <returns>Retorna un <see cref="Result{T}"/> de éxito cuyo valor es
-        /// una colección de nombres de usuarios esperando por un oponente para
+        /// <returns>Retorna una <see cref="IReadOnlyList{T}"/> con una
+        /// colección de nombres de usuarios esperando por un oponente para
         /// jugar.</returns>
-        public Result<IReadOnlyList<string>> GetUsersWaitingForOpponent()
+        public IReadOnlyList<string> GetUsersWaitingForOpponent()
         {
-            return Result.Success<IReadOnlyList<string>>(
-                this.waitingList
-                    .Select(user => user.UserName)
-                    .ToList()
-                    .AsReadOnly());
+            return this.waitingList
+                .Select(user => user.UserName)
+                .ToList()
+                .AsReadOnly();
         }
 
         /// <summary>

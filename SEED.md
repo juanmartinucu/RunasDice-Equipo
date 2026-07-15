@@ -6,6 +6,8 @@
 <!-- markdownlint-disable-next-line MD025 -->
 # Tabla de contenido <!-- omit in toc -->
 
+<!-- cSpell:ignore Façade façade -->
+
 * [Código provisto](#código-provisto)
   * [Façade vs Bot](#façade-vs-bot)
   * [Comandos del bot](#comandos-del-bot)
@@ -21,7 +23,7 @@ Este repositorio no sólo contiene la consigna del proyecto, sino un código
 
 El código provisto:
 
-* Implementa las [historias de usuario](./STORIES.md#historias-de-usuario) 1, 2
+* Implementa las [historias de usuario](./STORIES.md) 1, 2
   y 3.
 
 * Muestra cómo implementar un bot de Discord en C# utilizando un patrón llamado
@@ -137,9 +139,9 @@ damos; agregarás tus propias clases y las modificaciones que te damos en ese ar
 ## Casos de prueba
 
 Te damos programados los casos de prueba de todas las clases del
-[dominio](./test/LibraryTests/Domain/) y de todos los
+[dominio](./test/LibraryTests/Domain) y de todos los
 [comandos](./test/LibraryTests/Commands/). No hay casos de prueba para las
-clases que dependen de Discord —en [esta carpeta](./src/Library/Discord/) que
+clases que dependen de Discord —en [esta carpeta](./src/Discord) que
 hemos decidido no probar—.
 
 A medida que lo pidamos en las entregas, deberás agregar casos de prueba para
