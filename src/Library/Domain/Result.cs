@@ -4,13 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ucu.Poo.RunasDices.Domain
 {
     /// <summary>
-    /// Esta clase representa un resultado de la <see cref="Facade"/>. El
+    /// Esta clase representa un resultado de la clase <see cref="Facade"/>. El
     /// resultado puede ser exitoso o fallido, según <see
     /// cref="Result.IsSuccess"/> sea <c>true</c> o <c>false</c>
     /// respectivamente; <see cref="Result.IsFailure"/> tiene el valor
@@ -23,25 +22,6 @@ namespace Ucu.Poo.RunasDices.Domain
     public class Result
     {
         /// <summary>
-        /// Obtiene el valor del resultado: <c>true</c> si es de éxito y
-        /// <c>false</c> en caso contrario.
-        /// </summary>
-        public bool IsSuccess { get; }
-
-        /// <summary>
-        /// Obtiene el valor del resultado: <c>true</c> si es fallido y
-        /// <c>false</c> en caso contrario.
-        /// </summary>
-        public bool IsFailure => !IsSuccess;
-
-        /// <summary>
-        /// Obtiene el o los mensajes de errores si <see
-        /// cref="Result.IsFailure"/> es <c>true</c>. Es <c>null</c> en caso
-        /// contrario.
-        /// </summary>
-        public string Errors { get; }
-
-        /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="Result"/> con
         /// el o los mensajes de error en caso de resultado fallido.
         /// </summary>
@@ -50,9 +30,28 @@ namespace Ucu.Poo.RunasDices.Domain
         /// <param name="errors">El o los mensajes de error.</param>
         protected Result(bool isSuccess, string errors = null)
         {
-            IsSuccess = isSuccess;
-            Errors = errors;
+            this.IsSuccess = isSuccess;
+            this.Errors = errors;
         }
+
+        /// <summary>
+        /// Obtiene un valor que indica si el resultado es de éxito o de
+        /// fracaso.
+        /// </summary>
+        public bool IsSuccess { get; }
+
+        /// <summary>
+        /// Obtiene un valor que indica si el resultado es de fracaso o de
+        /// éxito.
+        /// </summary>
+        public bool IsFailure => !this.IsSuccess;
+
+        /// <summary>
+        /// Obtiene el o los mensajes de errores si <see
+        /// cref="Result.IsFailure"/> es <c>true</c>. Es <c>null</c> en caso
+        /// contrario.
+        /// </summary>
+        public string Errors { get; }
 
         /// <summary>
         /// Crea una instancia de la clase <see cref="Result"/> para representar
@@ -118,17 +117,12 @@ namespace Ucu.Poo.RunasDices.Domain
     /// caso de éxito.
     /// </summary>
     /// <typeparam name="T">El valor asociado al resultado exitoso.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleType", Justification = "Reviewed.")]
     public class Result<T> : Result
     {
         /// <summary>
-        /// Obtiene el valor asociado al resultado en caso de éxito; en caso de
-        /// error será <c>default</c> para el tipo <typeparamref name="T"/>.
-        /// </summary>
-        public T Value { get; }
-
-        /// <summary>
-        /// Inicializa una nueva instancia de <see cref="Result{T}"/> que
-        /// representa un resultado exitoso con valor.
+        /// Inicializa una nueva instancia de la clase <see cref="Result{T}"/>
+        /// que representa un resultado exitoso con valor.
         /// </summary>
         /// <param name="value">El valor asociado al resultado exitoso.</param>
         public Result(T value)
@@ -138,11 +132,11 @@ namespace Ucu.Poo.RunasDices.Domain
         }
 
         /// <summary>
-        /// Inicializa una nueva instancia de <see cref="Result{T}"/> que
-        /// representa un resultado fallido con una colección de errores. En
+        /// Inicializa una nueva instancia de la clase <see cref="Result{T}"/>
+        /// que representa un resultado fallido con una colección de errores. En
         /// este caso, el valor asociado al resultado exitoso <see
         /// cref="Result{T}.Value"/> es <c>default</c> para el tipo
-        /// <typeparamref name="T"/>
+        /// <typeparamref name="T"/>.
         /// </summary>
         /// <param name="errors">El o los mensajes de error.</param>
         public Result(string errors)
@@ -150,5 +144,11 @@ namespace Ucu.Poo.RunasDices.Domain
         {
             this.Value = default(T);
         }
+
+        /// <summary>
+        /// Obtiene el valor asociado al resultado en caso de éxito; en caso de
+        /// error será <c>default</c> para el tipo <typeparamref name="T"/>.
+        /// </summary>
+        public T Value { get; }
     }
 }

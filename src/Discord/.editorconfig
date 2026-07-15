@@ -3,3 +3,7 @@ root = false
 
 [*.cs]
 dotnet_diagnostic.CA1031.severity = none
+dotnet_diagnostic.CA1848.severity = none
+
+[*Messages.cs]
+dotnet_diagnostic.SA1204.severity = none

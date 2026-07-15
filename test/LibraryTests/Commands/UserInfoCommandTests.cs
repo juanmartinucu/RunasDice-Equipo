@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Moq.Protected;
 using NUnit.Framework;
 using Ucu.Poo.RunasDices.Commands;
+using Ucu.Poo.RunasDices.Discord;
 using Ucu.Poo.RunasDices.Domain;
 
 namespace Ucu.Poo.RunasDices.Tests.Commands
@@ -12,49 +13,45 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
         [SetUp]
         public void SetUp()
         {
-            ResetFacadeCreateRepliesAndMock();
+            this.ResetFacadeCreateRepliesAndMock();
         }
 
         [Test]
         public async Task ExecuteAsync_WithoutParameters_UsesSendingUserAndRepliesWithUserInfo()
         {
-            // Arrange: nada
+            // Arrange: nada extra; GetSenderOrAliasDisplayName(parameters) devolverá SendingUser
 
             // Act
-            await CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync();
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 Assert.That(
-                    Reply,
+                    this.Reply,
                     Is.EqualTo(FacadeMessages.UserIsNew(SendingUser)));
             }
         }
 
         [Test]
-        public async Task ExecuteAsync_WithExistingDisplayName_UsesThatUserAndRepliesWithUserInfo()
+        public async Task ExecuteAsync_WithAliasOnly_UsesAliasAndRepliesWithUserInfo()
         {
             // Arrange
             const string otherUser = "other";
-
-            // Configura el mock para simular que el usuario 'other' existe en
-            // el contexto de Discord
-            CommandMock
-                .Protected()
-                .Setup<bool>("UserExists", otherUser)
-                .Returns(true);
+            // El alias se pasa como "as:other". Parameters marcará AliasIncluded = true
+            // y CommandBase.GetSenderOrAliasDisplayName (mockeado en CommandTestBase)
+            // devolverá 'other' como "sender efectivo".
 
             // Act
-            await CommandMock.Object.ExecuteAsync(otherUser);
+            await this.CommandMock.Object.ExecuteAsync($"as:{otherUser}");
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 Assert.That(
-                    Reply,
+                    this.Reply,
                     Is.EqualTo(FacadeMessages.UserIsNew(otherUser)));
             }
         }
@@ -65,23 +62,62 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // Arrange
             const string unknownUser = "unknown";
 
-            // Configura el mock para simular que el usuario NO existe
-            CommandMock
+            // Simulamos que el usuario NO existe en el contexto de Discord
+            this.CommandMock
                 .Protected()
                 .Setup<bool>("UserExists", unknownUser)
                 .Returns(false);
 
             // Act
-            await CommandMock.Object.ExecuteAsync(unknownUser);
+            await this.CommandMock.Object.ExecuteAsync(unknownUser);
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 Assert.That(
-                    Reply,
-                    Is.EqualTo(
-                        UserInfoCommandMessages.UserNotFound(unknownUser)));
+                    this.Reply,
+                    Is.EqualTo(UserInfoCommandMessages.UserNotFound(unknownUser)));
+            }
+        }
+
+        [Test]
+        public async Task ExecuteAsync_WithMoreThanOneParameter_SendsCommandUsage()
+        {
+            // Arrange: nada extra
+
+            // Act
+            await this.CommandMock.Object.ExecuteAsync("uno dos");
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(this.Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.EqualTo(UserInfoCommandMessages.CommandUsage));
+            }
+        }
+
+        [Test]
+        public async Task ExecuteAsync_WhenParametersThrowsInvalidOperationException_SendsErrorMessage()
+        {
+            // Arrange
+            // Forzamos un caso en el que Parameters lance InvalidOperationException,
+            // por ejemplo usando dos alias "as:" (según tu implementación de Parameters).
+
+
+            // Act
+            await this.CommandMock.Object.ExecuteAsync("as:uno as:dos");
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(this.Reply, Is.Not.Null);
+                // El mensaje final lo forma UserInfoCommandMessages.Error(exception.Message)
+                // donde exception.Message será "MultipleAliases" o "InvalidAlias"
+                Assert.That(
+                    this.Reply,
+                    Is.EqualTo(UserInfoCommandMessages.Error(ParametersMessages.MultipleAliases)).Or
+                        .EqualTo(UserInfoCommandMessages.Error(ParametersMessages.InvalidAlias)));
             }
         }
     }

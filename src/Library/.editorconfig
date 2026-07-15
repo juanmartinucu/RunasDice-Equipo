@@ -1,0 +1,7 @@
+# Configuración para los casos de prueba
+root = false
+
+[*/*Messages.cs]
+dotnet_diagnostic.SA1204.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none

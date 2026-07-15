@@ -1,6 +1,12 @@
-﻿using System;
-using Ucu.Poo.RunasDices.Domain;
+﻿//------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Universidad Católica del Uruguay">
+//     Copyright (c) Programación II. Derechos reservados.
+// </copyright>
+//------------------------------------------------------------------------------
+
+using System;
 using Ucu.Poo.RunasDices.Discord;
+using Ucu.Poo.RunasDices.Domain;
 
 namespace Ucu.Poo.RunasDices.Program
 {

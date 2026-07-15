@@ -11,8 +11,6 @@ using Discord.Commands;
 using Ucu.Poo.RunasDices.Discord;
 using Ucu.Poo.RunasDices.Domain;
 
-// cSpell:ignore waitlist
-
 namespace Ucu.Poo.RunasDices.Commands
 {
     /// <summary>
@@ -24,6 +22,8 @@ namespace Ucu.Poo.RunasDices.Commands
         /// <summary>
         /// Implementa el comando 'waitlist'.
         /// </summary>
+        /// <returns>Una tarea asíncrona para representar la ejecución del
+        /// comando.</returns>
         [Command("waitlist")]
         [Summary("Muestra la lista de usuarios esperando por un oponente.")]
         public async Task ExecuteAsync()
@@ -32,32 +32,17 @@ namespace Ucu.Poo.RunasDices.Commands
 
             if (usersWaiting.Count == 0)
             {
-                await ReplyAsync(
+                await this.ReplyAsync(
                     WaitListCommandMessages.NoPlayersWaitingToPlay)
                     .ConfigureAwait(false);
             }
             else
             {
                 string users = string.Join(", ", usersWaiting.Select(user => $"'{user}'"));
-                await ReplyAsync(
+                await this.ReplyAsync(
                     WaitListCommandMessages.PlayersWaiting(users))
                     .ConfigureAwait(false);
             }
         }
-    }
-
-    /// <summary>
-    /// Esta clase contiene todos los mensajes retornados por <see
-    /// cref="WaitListCommand"/>.
-    /// </summary>
-    public static class WaitListCommandMessages
-    {
-        /// <summary> No hay jugadores esperando para jugar.</summary>
-        public const string NoPlayersWaitingToPlay =
-            "**Error**: No hay jugadores esperando por oponente. Usa `!play` para inscribirte.";
-
-        /// <summary>Lista de usuarios esperando.</summary>
-        public static string PlayersWaiting(string users) =>
-            $"**Okay**: esperan por oponente: {users}. Usa !play <usuario> para unirte.";
     }
 }

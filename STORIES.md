@@ -34,7 +34,14 @@ A continuación de damos la lista de historias de usuario a implementar:
     * Ambos `Player` son notificados del inicio de la partida.
     * El `Player` que tiene el primer turno se determina aleatoriamente.
 
-4. Como `Player`, quiero que la aplicación configure la partida automáticamente
+4. Como `Player`, quiero hacerme pasar por otro `Player`, para poder probar el
+   juego sin que haya otro jugador.
+
+    Criterios de aceptación:
+
+    * El resultado es exactamente el mismo si lo hubiera hecho el otro `Player`.
+
+5. Como `Player`, quiero que la aplicación configure la partida automáticamente
    tras ser emparejado.
 
     Criterios de aceptación:
@@ -46,7 +53,7 @@ A continuación de damos la lista de historias de usuario a implementar:
     * la aplicación asigna claramente el rol de `ActivePlayer` al `Player`
       seleccionado al azar y de `DefenderPlayer` al oponente.
 
-5. Como `ActivePlayer`, quiero iniciar mi turno cargando mis recursos y
+6. Como `ActivePlayer`, quiero iniciar mi turno cargando mis recursos y
    robando una carta.
 
     Criterios de aceptación:
@@ -60,7 +67,7 @@ A continuación de damos la lista de historias de usuario a implementar:
       acordada al inicio de la partida (por ejemplo, no robar o derrota
       instantánea).
 
-6. Como `ActivePlayer`, quiero jugar una carta de tipo `Creature` de mi mano
+7. Como `ActivePlayer`, quiero jugar una carta de tipo `Creature` de mi mano
    pagando su costo de Ether.
 
     Criterios de aceptación:
@@ -77,7 +84,7 @@ A continuación de damos la lista de historias de usuario a implementar:
       (`Player` o `Creature`) y aplica el efecto definido por la carta (por
       ejemplo, infligir daño, curar, modificar atributos, robar cartas, etc.).
 
-7. Como `ActivePlayer`, quiero jugar una carta de tipo `Spell` o una de tipo
+8. Como `ActivePlayer`, quiero jugar una carta de tipo `Spell` o una de tipo
    `Upgrade` para alterar el estado del juego.
 
     Criterios de aceptación:
@@ -96,7 +103,7 @@ A continuación de damos la lista de historias de usuario a implementar:
       (`StandardNumericDice`, `RiskDice`, `RuneDice` u otros definidos) y
       procesa el resultado según la descripción de la carta.
 
-8. Como `ActivePlayer`, quiero declarar qué criaturas van a atacar en la Fase
+9. Como `ActivePlayer`, quiero declarar qué criaturas van a atacar en la Fase
    de Combate.
 
     Criterios de aceptación:
@@ -106,7 +113,7 @@ A continuación de damos la lista de historias de usuario a implementar:
     * la aplicación notifica al `DefenderPlayer` cuáles son las criaturas atacantes
       y espera su declaración de defensa.
 
-9. Como `DefenderPlayer`, quiero asignar mis criaturas bloqueadoras para
+10. Como `DefenderPlayer`, quiero asignar mis criaturas bloqueadoras para
    defenderme de los ataques.
 
     Criterios de aceptación:
@@ -116,7 +123,7 @@ A continuación de damos la lista de historias de usuario a implementar:
     * Una criatura bloqueadora propia solo puede interceptar a una única
       criatura atacante.
 
-10. Como `Player`, quiero que la aplicación resuelva los combates usando los dados
+11. Como `Player`, quiero que la aplicación resuelva los combates usando los dados
     automáticos.
 
     Criterios de aceptación:
@@ -141,7 +148,7 @@ A continuación de damos la lista de historias de usuario a implementar:
       mitiga daño recibido, la aplicación aplica esa reducción la primera vez que
       registre daño en ese turno, según las reglas de dicha carta.
 
-11. Como `ActivePlayer`, quiero finalizar mi turno de forma manual y controlar
+12. Como `ActivePlayer`, quiero finalizar mi turno de forma manual y controlar
     el límite de mi mano.
 
     Criterios de aceptación:
@@ -153,7 +160,7 @@ A continuación de damos la lista de historias de usuario a implementar:
     * Una vez resuelta la fase, el turno termina y el rol de `ActivePlayer` pasa
       al oponente.
 
-12. Como `Player`, quiero que la aplicación declare el fin de la partida cuando la
+13. Como `Player`, quiero que la aplicación declare el fin de la partida cuando la
     vida de alguien llegue a 0 o menos.
 
     Criterios de aceptación:

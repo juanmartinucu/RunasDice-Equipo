@@ -14,12 +14,7 @@ namespace Ucu.Poo.RunasDices.Domain
     public class User
     {
         /// <summary>
-        /// Obtiene el nombre del usuario.
-        /// </summary>
-        public string UserName { get; }
-
-        /// <summary>
-        /// Crea una nueva instancia de la clase <see cref="User"/>.
+        /// Inicializa una nueva instancia de la clase <see cref="User"/>.
         /// </summary>
         /// <param name="userName">El nombre de usuario de este usuario.</param>
         /// <exception cref="ArgumentException">Cuando el nombre de usuario
@@ -30,5 +25,10 @@ namespace Ucu.Poo.RunasDices.Domain
 
             this.UserName = userName;
         }
+
+        /// <summary>
+        /// Obtiene el nombre del usuario.
+        /// </summary>
+        public string UserName { get; }
     }
 }

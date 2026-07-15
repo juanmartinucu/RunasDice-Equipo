@@ -12,7 +12,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
         [SetUp]
         public void SetUp()
         {
-            ResetFacadeCreateRepliesAndMock();
+            this.ResetFacadeCreateRepliesAndMock();
         }
 
         [Test]
@@ -22,14 +22,14 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             Facade facade = Facade.Instance;
 
             // Act
-            await CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync();
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 Assert.That(
-                    Reply,
+                    this.Reply,
                     Is.EqualTo(
                         WaitListCommandMessages.NoPlayersWaitingToPlay));
             }
@@ -43,14 +43,14 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             facade.AddUserToWaitingList("Test");
 
             // Act
-            await CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync();
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 Assert.That(
-                    Reply,
+                    this.Reply,
                     Is.EqualTo(
                         WaitListCommandMessages.PlayersWaiting("'Test'")));
             }
@@ -66,15 +66,15 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             facade.AddUserToWaitingList("Test3");
 
             // Act
-            await CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync();
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(Reply, Is.Not.Null);
+                Assert.That(this.Reply, Is.Not.Null);
                 // El orden depende de cómo Facade devuelva la lista; asumimos que respeta el orden de inserción.
                 Assert.That(
-                    Reply,
+                    this.Reply,
                     Is.EqualTo(
                         WaitListCommandMessages.PlayersWaiting("'Test1', 'Test2', 'Test3'")));
             }

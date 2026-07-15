@@ -14,11 +14,6 @@ namespace Ucu.Poo.RunasDices.Domain
     public class Player
     {
         /// <summary>
-        /// El usuario correspondiente a este jugador.
-        /// </summary>
-        public User User{ get; private set; }
-
-        /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="Player"/>.
         /// </summary>
         /// <param name="user">El usuario correspondiente a este jugador.</param>
@@ -28,5 +23,10 @@ namespace Ucu.Poo.RunasDices.Domain
 
             this.User = user;
         }
+
+        /// <summary>
+        /// Obtiene el usuario correspondiente a este jugador.
+        /// </summary>
+        public User User { get; private set; }
     }
 }

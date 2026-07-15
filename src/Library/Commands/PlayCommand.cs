@@ -5,7 +5,6 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.CodeDom.Compiler;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Ucu.Poo.RunasDices.Discord;
@@ -25,90 +24,73 @@ namespace Ucu.Poo.RunasDices.Commands
     /// </summary>
     public class PlayCommand : CommandBase
     {
-        private static readonly char[] separator = new[] { ' ' };
-
         /// <summary>
         /// Implementa el comando 'play'.
         /// </summary>
-        /// <param name="parameters">Nombre del usuario al que unirse.</param>
+        /// <param name="input">Nombre del usuario al que unirse.</param>
+        /// <returns>Una tarea asíncrona para representar la ejecución del
+        /// comando.</returns>
         [Command("play")]
         [Summary("Sin parámetros te inscribe; con un usuario te une a su partida.")]
         public async Task ExecuteAsync(
             [Remainder]
             [Summary("Usuario que está esperando oponente")]
-            string parameters = null)
+            string input = null)
         {
-            // Cuando no se indica un parámetro, se inscribe al usuario que
-            // envía el mensaje para esperar un oponente.
-            if (string.IsNullOrWhiteSpace(parameters))
-            {
-                string userName = this.GetDisplayName();
-
-                Facade.Instance.AddUserToWaitingList(userName);
-                await ReplyAsync(
-                    PlayCommandMessages.UserAddedToWaitingList(userName))
-                    .ConfigureAwait(false);
-
-                return;
-            }
-
-            // Cuando se indica uno o más parámetros, se valida que sea un único
-            // parámetro.
-            string[] args = parameters.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-            if (args.Length != 1)
-            {
-                await ReplyAsync(PlayCommandMessages.CommandHelp).ConfigureAwait(false);
-
-                return;
-            }
-
-            // Cuando se indica exactamente un parámetro, se asume que es el
-            // nombre de un usuario que está esperando un oponente para jugar.
-            string opponentId = args[0];
-
             try
             {
-                string userName = this.GetDisplayName();
+                Parameters parameters = new Parameters(input);
+                string userName;
+
+                // Cuando no se indica un parámetro, se inscribe al usuario que
+                // envía el mensaje o al alias para esperar un oponente.
+                if (parameters.IsEmpty)
+                {
+                    userName = this.GetSenderOrAliasDisplayName(parameters);
+
+                    Facade.Instance.AddUserToWaitingList(userName);
+                    await this.ReplyAsync(
+                        PlayCommandMessages.UserAddedToWaitingList(userName))
+                        .ConfigureAwait(false);
+
+                    return;
+                }
+
+                // Cuando hay más de un parámetro es un error y se informa cómo usar
+                // el comando.
+                if (parameters.Count != 1)
+                {
+                    await this.ReplyAsync(PlayCommandMessages.CommandUsage)
+                        .ConfigureAwait(false);
+
+                    return;
+                }
+
+                // Cuando se indica exactamente un parámetro, se asume que es el
+                // nombre de un usuario que está esperando un oponente para jugar.
+                string opponentId = parameters[0];
+                userName = this.GetSenderOrAliasDisplayName(parameters);
                 string opponentName = this.GetDisplayName(opponentId);
 
                 Result<Game> result = Facade.Instance.StartGame(userName, opponentName);
 
                 if (result.IsSuccess)
                 {
-                    await ReplyAsync(
+                    await this.ReplyAsync(
                         PlayCommandMessages.GameStarted(opponentName))
                         .ConfigureAwait(false);
                 }
                 else
                 {
-                    await ReplyAsync(result.Errors).ConfigureAwait(false);
+                    await this.ReplyAsync(result.Errors).ConfigureAwait(false);
                 }
             }
             catch (ArgumentException exception)
             {
-                await ReplyAsync(exception.Message).ConfigureAwait(false);
+                await this.ReplyAsync(
+                    UserInfoCommandMessages.Error(exception.Message))
+                    .ConfigureAwait(false);
             }
         }
     }
-
-    /// <summary>
-    /// Esta clase contiene todos los mensajes retornados por <see
-    /// cref="PlayCommand"/>.
-    /// </summary>
-    public static class PlayCommandMessages
-    {
-        /// <summary>Usuario agregado a la lista de espera.</summary>
-        public static string UserAddedToWaitingList(string userName) =>
-            $"**Okay**: '{userName}' agregado a lista de espera para jugar.";
-
-        /// <summary>Ayuda del comando.</summary>
-        public static string CommandHelp =>
-            "Usa !play o !play <usuario>.";
-
-        /// <summary>Partida iniciada.</summary>
-        public static string GameStarted(string opponentName) =>
-            $"**Okay**: unido a la partida con '{opponentName}'.";
-    }
-
 }

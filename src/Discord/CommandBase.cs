@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// <copyright file="CommandHelper.cs" company="Universidad Católica del Uruguay">
+// <copyright file="CommandBase.cs" company="Universidad Católica del Uruguay">
 //     Copyright (c) Programación II. Derechos reservados.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -14,42 +14,67 @@ namespace Ucu.Poo.RunasDices.Discord
 {
     /// <summary>
     /// Esta clase es la clase base para todos los comandos del bot. Permite
-    /// conocer el nombre visible del usuario que ejecuta el comando o de un
-    /// usuario cualquiera y provee un mecanismo para poder probar los comandos
-    /// del bot pero sin ejecutar el bot.
+    /// obtener mediante el método <see
+    /// cref="CommandBase.GetSenderOrAliasDisplayName(Parameters)"/> el nombre
+    /// visible del usuario que ejecuta el comando o de un alias si los
+    /// parámetros lo incluyen. El método <see
+    /// cref="CommandBase.GetDisplayName(string)"/> permite obtener el nombre
+    /// visible de un usuario cualquiera. Además provee un mecanismo para poder
+    /// probar los comandos del bot pero sin ejecutar el bot con la propiedad
+    /// <see cref="CommandBase.OnReplyAsync"/>.
     /// </summary>
     public abstract class CommandBase : ModuleBase<SocketCommandContext>
     {
         /// <summary>
         /// Obtiene o establece una acción a ejecutar cada vez que el comando
-        /// devuelve una respuesta con <see cref="ModuleBase{T}.ReplyAsync(string,
-        /// bool, Embed, RequestOptions, AllowedMentions, MessageReference,
-        /// MessageComponent, ISticker[], Embed[], MessageFlags)"/>. Esto permite
-        /// obtener las respuestas retornadas por el comando en los casos de prueba.
+        /// devuelve una respuesta con <see
+        /// cref="ModuleBase{T}.ReplyAsync(string, bool, Embed, RequestOptions,
+        /// AllowedMentions, MessageReference, MessageComponent, ISticker[],
+        /// Embed[], MessageFlags)"/>. Esto permite obtener las respuestas
+        /// retornadas por el comando en los casos de prueba.
         /// </summary>
         public Action<string> OnReplyAsync { get; set; }
 
         /// <summary>
         /// Retorna el nombre visible del usuario de Discord que ejecuta este
-        /// comando. En el contexto de este comando el nombre visible del
-        /// usuario retornado es un usuario válido en el servidor actual.
+        /// comando o del alias indicado como parámetro si lo hubiera. En el
+        /// contexto de este comando el nombre visible del usuario retornado es
+        /// un usuario válido en el servidor actual, excepto cuando es un alias
+        /// que no se valida ni se busca el en servidor.
         /// </summary>
-        /// <param name="name">El nombre de usuario a obtener.</param>
+        /// <param name="parameters">La lista de parámetros recibida por el
+        /// comando.</param>
         /// <returns>
-        /// Cuando no se provee un nombre, retorna el nombre visible del usuario
-        /// que envía el comando en el servidor de Discord del contexto
-        /// provisto. Cuando se provee un nombre, asume que ese nombre puede ser
-        /// el nombre visible, el nickname, o el nombre de usuario global de
-        /// Discord, pero retorna el nombre visible de usuario. Esto permite
-        /// usar de forma consistente el nombre visible del usuario
-        /// independiente de cómo se obtenga.
+        /// El valor retornado es consistente con el usado en el método <see
+        /// cref="CommandBase.GetDisplayName(string)"/>. Esto permite usar de
+        /// forma consistente el nombre visible del usuario independiente de
+        /// cómo se obtenga.
         /// </returns>
-        protected virtual string GetDisplayName(string name = null)
+        protected virtual string GetSenderOrAliasDisplayName(Parameters parameters)
         {
-            if (name == null)
+            ArgumentNullException.ThrowIfNull(parameters);
+
+            if (parameters.AliasIncluded)
             {
-                name = this.Context.Message.Author.Username;
+                return parameters.Alias;
             }
+
+            return this.Context.Message.Author.Username;
+        }
+
+        /// <summary>
+        /// Retorna el nombre visible del usuario cuyo nombre visible, nickname,
+        /// o nombre global que se recibe como argumento. Esto permite usar de
+        /// forma consistente el nombre visible del usuario independiente de
+        /// cómo se obtenga.
+        /// </summary>
+        /// <param name="name">El nombre visible, nickname, o nombre global de
+        /// un usuario.</param>
+        /// <returns>El nombre visible de ese usuario.</returns>
+        protected virtual string GetDisplayName(string name)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(name);
+            ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
             foreach (SocketGuildUser user in this.Context.Guild.Users)
             {
@@ -95,16 +120,20 @@ namespace Ucu.Poo.RunasDices.Discord
             return false;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        protected override Task<IUserMessage> ReplyAsync(string message = null,
-            bool isTTS = false, Embed embed = null, RequestOptions options = null,
-            AllowedMentions allowedMentions = null, MessageReference messageReference = null,
-            MessageComponent components = null, ISticker[] stickers = null,
-            Embed[] embeds = null, MessageFlags flags = MessageFlags.None)
+        protected override Task<IUserMessage> ReplyAsync(
+            string message = null,
+            bool isTTS = false,
+            Embed embed = null,
+            RequestOptions options = null,
+            AllowedMentions allowedMentions = null,
+            MessageReference messageReference = null,
+            MessageComponent components = null,
+            ISticker[] stickers = null,
+            Embed[] embeds = null,
+            MessageFlags flags = MessageFlags.None)
         {
-            OnReplyAsync?.Invoke(message);
+            this.OnReplyAsync?.Invoke(message);
             return base.ReplyAsync(
                 message,
                 isTTS,

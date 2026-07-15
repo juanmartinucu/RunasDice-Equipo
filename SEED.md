@@ -23,8 +23,7 @@ Este repositorio no sólo contiene la consigna del proyecto, sino un código
 
 El código provisto:
 
-* Implementa las [historias de usuario](./STORIES.md) 1, 2
-  y 3.
+* Implementa las [historias de usuario](./STORIES.md) 1, 2, 3 y 4.
 
 * Muestra cómo implementar un bot de Discord en C# utilizando un patrón llamado
   [Façade](https://refactoring.guru/design-patterns/facade).
@@ -85,6 +84,12 @@ El bot que te damos ya responde a los mensajes que te contamos [aquí](./BOT.md)
 * `!waitlist`. Este comando implementa la [historia de usuario](./STORIES.md)
   número 2. Está implementado en la clase
   [`WaitListCommand`](./src/Library/Commands/WaitListCommand.cs).
+
+* `!who as:{alias}`, `!play as:{alias}`, y todos los comandos que tu implementes
+  como sucesores de [`CommandBase`](./src/Discord/CommandBase.cs): funcionan
+  igual que el comando sin incluir `as:{alias}` como si el comando hubiera sido
+  enviado por un usuario `alias`. Esto implementa la [historia de
+  usuario](./STORIES.md) número 4.
 
 ## Otras clases
 

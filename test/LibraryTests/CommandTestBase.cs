@@ -1,6 +1,3 @@
-// Esta clase no es una clase de prueba, sino una clase base para las clases de
-// prueba de todos los comandos.
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
@@ -11,25 +8,21 @@ using Ucu.Poo.RunasDices.Domain;
 
 namespace Ucu.Poo.RunasDices.Tests
 {
-    public class CommandTestBase<T>  where T: CommandBase
+    public class CommandTestBase<T> where T : CommandBase
     {
-        // El nombre del usuario que ejecuta el comando
         protected const string SendingUser = "user";
 
-        // Un mock del comando a probar que independiza el comando de Discord
         protected Mock<T> CommandMock;
 
-        // La lista de respuestas retornados por el comando
         protected List<string> Replies;
 
-        // La primera respuesta del comando o null si no hay respuestas
         protected string Reply
         {
             get
             {
-                if (this.Replies.Count >= 0)
+                if (this.Replies.Count > 0)
                 {
-                    return Replies[0];
+                    return this.Replies[0];
                 }
 
                 return null;
@@ -39,14 +32,16 @@ namespace Ucu.Poo.RunasDices.Tests
         protected void ResetFacadeCreateRepliesAndMock()
         {
             Facade.Reset();
-            Replies = new List<string>();
-            CommandMock = CreateCommandMock();
+            this.Replies = new List<string>();
+            this.CommandMock = this.CreateCommandMock();
         }
 
         private Mock<T> CreateCommandMock()
         {
             var mock = new Mock<T> { CallBase = true };
 
+            // Crea un mock del comando T para guardar en Replies el resultado
+            // de la ejecución del comando.
             mock
                 .Protected()
                 .Setup<Task<IUserMessage>>(
@@ -75,15 +70,27 @@ namespace Ucu.Poo.RunasDices.Tests
                 {
                     if (message != null)
                     {
-                        Replies.Add(message);
+                        this.Replies.Add(message);
                     }
                 })
                 .Returns(Task.FromResult<IUserMessage>(null));
 
+            // Para los tests, el "sender" sin alias siempre es SendingUser.
             mock
                 .Protected()
-                .Setup<string>("GetDisplayName", ItExpr.Is<string>(s => s == null))
-                .Returns(SendingUser);
+                .Setup<string>("GetSenderOrAliasDisplayName", ItExpr.IsAny<Parameters>())
+                .Returns((Parameters p) =>
+                {
+                    if (p == null)
+                    {
+                        return SendingUser;
+                    }
+
+                    return p.AliasIncluded ? p.Alias : SendingUser;
+                });
+
+            // Si en algún test necesitás un comportamiento distinto, lo podés sobrescribir
+            // con otro Setup en ese test concreto.
 
             return mock;
         }

@@ -53,13 +53,17 @@ namespace Ucu.Poo.RunasDices.Discord
                 {
                     var keyInfo = Console.ReadKey();
 
-                    if (keyInfo.Key != ConsoleKey.Q) continue;
+                    if (keyInfo.Key != ConsoleKey.Q)
+                    {
+                        continue;
+                    }
 
                     Console.WriteLine("\nFinalizado");
                     await bot.StopAsync().ConfigureAwait(false);
 
                     return;
-                } while (true);
+                }
+                while (true);
             }
             catch (Exception exception)
             {

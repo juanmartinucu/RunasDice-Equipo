@@ -14,16 +14,6 @@ namespace Ucu.Poo.RunasDices.Domain
     public class Game
     {
         /// <summary>
-        /// El primer jugador de la partida.
-        /// </summary>
-        public Player Player1 { get; private set; }
-
-        /// <summary>
-        /// El segundo jugador de la partida.
-        /// </summary>
-        public Player Player2 { get; private set; }
-
-        /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="Game"/>.
         /// </summary>
         /// <param name="player1">El primer jugador de la partida.</param>
@@ -36,5 +26,15 @@ namespace Ucu.Poo.RunasDices.Domain
             this.Player1 = player1;
             this.Player2 = player2;
         }
+
+        /// <summary>
+        /// Obtiene el primer jugador de la partida.
+        /// </summary>
+        public Player Player1 { get; private set; }
+
+        /// <summary>
+        /// Obtiene el segundo jugador de la partida.
+        /// </summary>
+        public Player Player2 { get; private set; }
     }
 }

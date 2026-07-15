@@ -4,6 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Ucu.Poo.RunasDices.Discord;
@@ -21,8 +22,10 @@ namespace Ucu.Poo.RunasDices.Commands
         /// <summary>
         /// Implementa el comando 'who' del bot.
         /// </summary>
-        /// <param name="displayName">El nombre de usuario de Discord a
+        /// <param name="input">El nombre de usuario de Discord a
         /// buscar.</param>
+        /// <returns>Una tarea asíncrona para representar la ejecución del
+        /// comando.</returns>
         [Command("who")]
         [Summary(
             "Devuelve información sobre el usuario que se indica como " +
@@ -31,38 +34,48 @@ namespace Ucu.Poo.RunasDices.Commands
         public async Task ExecuteAsync(
             [Remainder]
             [Summary("El usuario del que tener información, opcional")]
-            string displayName = null)
+            string input = null)
         {
-            if (displayName != null)
+            try
             {
-                bool exists = this.UserExists(displayName);
+                Parameters parameters = new Parameters(input);
 
-                if (!exists)
+                // Cuando hay más de un parámetro es un error y se informa cómo usar
+                // el comando
+                if (parameters.Count > 1)
                 {
-                    await ReplyAsync(
-                        UserInfoCommandMessages.UserNotFound(displayName))
-                        .ConfigureAwait(false);
+                    await this.ReplyAsync(UserInfoCommandMessages.CommandUsage).ConfigureAwait(false);
 
                     return;
                 }
+
+                // Cuando hay un solo parámetro ese parámetro es el nombre del
+                // usuario del cual obtener información.
+                if (parameters.Count == 1)
+                {
+                    bool exists = this.UserExists(parameters[0]);
+
+                    if (!exists)
+                    {
+                        await this.ReplyAsync(
+                            UserInfoCommandMessages.UserNotFound(parameters[0]))
+                            .ConfigureAwait(false);
+
+                        return;
+                    }
+                }
+
+                string userName = this.GetSenderOrAliasDisplayName(parameters);
+
+                var result = Facade.Instance.GetUserInfo(userName);
+                await this.ReplyAsync(result).ConfigureAwait(false);
             }
-
-            string userName =
-                displayName ?? this.GetDisplayName();
-
-            var result = Facade.Instance.GetUserInfo(userName);
-            await ReplyAsync(result).ConfigureAwait(false);
+            catch (InvalidOperationException exception)
+            {
+                await this.ReplyAsync(
+                    UserInfoCommandMessages.Error(exception.Message))
+                    .ConfigureAwait(false);
+            }
         }
-    }
-
-    /// <summary>
-    /// Esta clase contiene todos los mensajes retornados por <see
-    /// cref="UserInfoCommand"/>.
-    /// </summary>
-    public static class UserInfoCommandMessages
-    {
-        /// <summary>Usuario agregado a la lista de espera.</summary>
-        public static string UserNotFound(string displayName) =>
-            $"No encuentro el usuario '{displayName}' en esta aplicación";
     }
 }

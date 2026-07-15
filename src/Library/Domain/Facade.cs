@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ucu.Poo.RunasDices.Domain
@@ -28,9 +29,11 @@ namespace Ucu.Poo.RunasDices.Domain
     /// </summary>
     public class Facade
     {
-        #region Singleton
+        #region
 
         private static Facade instance;
+        private IUsersRepository usersRepository;
+        private List<User> waitingList = new List<User>();
 
         // Este constructor privado impide que otras clases puedan crear instancias
         // de esta.
@@ -64,9 +67,6 @@ namespace Ucu.Poo.RunasDices.Domain
         }
 
         #endregion
-
-        private IUsersRepository usersRepository;
-        private List<User> waitingList = new List<User>();
 
         /// <summary>
         /// Devuelve información del usuario cuyo nombre de usuario se recibe
@@ -108,22 +108,6 @@ namespace Ucu.Poo.RunasDices.Domain
             return result;
         }
 
-        // Crea un usuario si no existe y lo retorna; en caso contrario retorna
-        // el usuario existente.
-        private User FindOrCreateUser(string userName)
-        {
-            ArgumentException.ThrowIfNullOrEmpty(userName);
-            ArgumentException.ThrowIfNullOrWhiteSpace(userName);
-
-            User userFound = this.usersRepository.Find(userName);
-            if (userFound == null)
-            {
-                userFound = this.usersRepository.Add(userName);
-            }
-
-            return userFound;
-        }
-
         /// <summary>
         /// Agrega el usuario cuyo nombre de usuario se recibe como parámetro a
         /// la lista de espera de jugadores esperando por un oponente para
@@ -136,6 +120,8 @@ namespace Ucu.Poo.RunasDices.Domain
         /// blanco.</exception>
         /// <exception cref="InvalidOperationException">Cuando el usuario ya
         /// está en la lista.</exception>
+        /// <returns>Una instancia de <see cref="Result"/> que indica si el resultado fue
+        /// exitoso o no.</returns>
         public Result AddUserToWaitingList(string userName)
         {
             ArgumentException.ThrowIfNullOrEmpty(userName);
@@ -154,15 +140,6 @@ namespace Ucu.Poo.RunasDices.Domain
             return Result.Success();
         }
 
-        // Retorna true si el usuario está esperando para jugar y false el caso
-        // contrario.
-        private bool InternalUserIsWaiting(string userName)
-        {
-            return this.waitingList.Any(
-                user => user.UserName.Equals(
-                    userName, StringComparison.OrdinalIgnoreCase));
-        }
-
         /// <summary>
         /// Determina si el usuario cuyo nombre de usuario se recibe como
         /// parámetro se ha inscrito en la lista de espera de jugadores
@@ -174,6 +151,9 @@ namespace Ucu.Poo.RunasDices.Domain
         /// contrario.</returns>
         /// <exception cref="ArgumentException">Cuando <paramref name="userName"/>
         /// es <c>null</c>, vacío o contiene solo espacios en blanco.</exception>
+        /// <returns>Una instancia de <see cref="Result"/> que indica si el
+        /// resultado fue exitoso o no, y en caso de éxito, el
+        /// resultado.</returns>
         public Result<bool> UserIsWaiting(string userName)
         {
             ArgumentException.ThrowIfNullOrEmpty(userName);
@@ -219,6 +199,9 @@ namespace Ucu.Poo.RunasDices.Domain
         /// <exception cref="ArgumentException">Cuando
         /// <paramref name="userName"/> o <paramref name="opponentName"/>
         /// es vacío o contiene solo espacios en blanco.</exception>
+        /// <returns>Una instancia de <see cref="Result"/> que indica si el juego
+        /// inició o no exitosamente, y en caso de éxito, la instancia de <see
+        /// cref="Game"/> creada.</returns>
         public Result<Game> StartGame(string userName, string opponentName)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(userName);
@@ -241,12 +224,41 @@ namespace Ucu.Poo.RunasDices.Domain
 
             return Result.Success<Game>(game);
         }
+
+        // Crea un usuario si no existe y lo retorna; en caso contrario retorna
+        // el usuario existente.
+        private User FindOrCreateUser(string userName)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(userName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(userName);
+
+            User userFound = this.usersRepository.Find(userName);
+            if (userFound == null)
+            {
+                userFound = this.usersRepository.Add(userName);
+            }
+
+            return userFound;
+        }
+
+        // Retorna true si el usuario está esperando para jugar y false el caso
+        // contrario.
+        private bool InternalUserIsWaiting(string userName)
+        {
+            return this.waitingList.Any(
+                user => user.UserName.Equals(
+                    userName, StringComparison.OrdinalIgnoreCase));
+        }
     }
 
     /// <summary>
-    /// Esta clase contiene todos los mensajes retornados por <see
+    /// Esta clase contiene todos los mensajes retornados por la clase <see
     /// cref="Facade"/>.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:StaticElementsMustAppearBeforeInstanceElements", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleType", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1615:ElementReturnValueMustBeDocumented", Justification = "Reviewed.")]
     public static class FacadeMessages
     {
         /// <summary>El usuario ya está esperando.</summary>
