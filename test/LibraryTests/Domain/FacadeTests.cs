@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Ucu.Poo.RunasDices.Domain;
 
-namespace Ucu.Poo.RunasDices.Tests
+namespace Ucu.Poo.RunasDices.Tests.Domain
 {
     [TestFixture]
     public class FacadeTests
@@ -84,14 +85,10 @@ namespace Ucu.Poo.RunasDices.Tests
             Facade facade = Facade.Instance;
 
             // Act
-            var actual = facade.GetUserInfo("Test");
+            string actual = facade.GetUserInfo("Test");
 
             // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(actual.IsSuccess, Is.True);
-                Assert.That(actual.Value, Is.EqualTo(FacadeMessages.UserIsNew("Test")));
-            }
+            Assert.That(actual, Is.EqualTo(FacadeMessages.UserIsNew("Test")));
         }
 
         [Test]
@@ -102,14 +99,10 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.GetUserInfo("Test");
 
             // Act
-            var actual = facade.GetUserInfo("Test");
+            string actual = facade.GetUserInfo("Test");
 
             // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(actual.IsSuccess, Is.True);
-                Assert.That(actual.Value, Is.EqualTo(FacadeMessages.UserCanPlay("Test")));
-            }
+            Assert.That(actual, Is.EqualTo(FacadeMessages.UserCanPlay("Test")));
         }
 
         [Test]
@@ -120,14 +113,10 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.AddUserToWaitingList("Test");
 
             // Act
-            var actual = facade.GetUserInfo("Test");
+            string actual = facade.GetUserInfo("Test");
 
             // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(actual.IsSuccess, Is.True);
-                Assert.That(actual.Value, Is.EqualTo(FacadeMessages.UserIsWaiting("Test")));
-            }
+            Assert.That(actual, Is.EqualTo(FacadeMessages.UserIsWaiting("Test")));
         }
 
         #endregion
@@ -175,7 +164,7 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.AddUserToWaitingList("Test");
 
             // Act
-            var actual = facade.AddUserToWaitingList("Test");
+            Result actual = facade.AddUserToWaitingList("Test");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -193,7 +182,7 @@ namespace Ucu.Poo.RunasDices.Tests
             Facade facade = Facade.Instance;
 
             // Act
-            var actual = facade.AddUserToWaitingList("Test");
+            Result actual = facade.AddUserToWaitingList("Test");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -247,7 +236,7 @@ namespace Ucu.Poo.RunasDices.Tests
             Facade facade = Facade.Instance;
 
             // Act
-            var actual = facade.UserIsWaiting("Test");
+            Result<bool> actual = facade.UserIsWaiting("Test");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -265,7 +254,7 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.AddUserToWaitingList("Test");
 
             // Act
-            var actual = facade.UserIsWaiting("test");
+            Result<bool> actual = facade.UserIsWaiting("test");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -352,7 +341,7 @@ namespace Ucu.Poo.RunasDices.Tests
             Facade facade = Facade.Instance;
 
             // Act
-            var actual = facade.StartGame("Test1", "Test2");
+            Result<Game> actual = facade.StartGame("Test1", "Test2");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -372,7 +361,7 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.AddUserToWaitingList("Pepe");
 
             // Act
-            var actual = facade.StartGame("Test", "Pepe");
+            Result<Game> actual = facade.StartGame("Test", "Pepe");
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -398,7 +387,7 @@ namespace Ucu.Poo.RunasDices.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                var actual = facade.UserIsWaiting("Test1");
+                Result<bool> actual = facade.UserIsWaiting("Test1");
                 Assert.That(actual.IsSuccess, Is.True);
                 Assert.That(actual.Value, Is.False);
 
@@ -419,14 +408,10 @@ namespace Ucu.Poo.RunasDices.Tests
             Facade facade = Facade.Instance;
 
             // Act
-            var actual = facade.GetUsersWaitingForOpponent();
+            IReadOnlyList<string> actual = facade.GetUsersWaitingForOpponent();
 
             // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(actual.IsSuccess, Is.True);
-                Assert.That(actual.Value, Is.Empty);
-            }
+            Assert.That(actual, Is.Empty);
         }
 
         [Test]
@@ -437,14 +422,10 @@ namespace Ucu.Poo.RunasDices.Tests
             facade.AddUserToWaitingList("Test");
 
             // Act
-            var actual = facade.GetUsersWaitingForOpponent();
+            IReadOnlyList<string> actual = facade.GetUsersWaitingForOpponent();
 
             // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(actual.IsSuccess, Is.True);
-                Assert.That(actual.Value, Does.Contain("Test"));
-            }
+            Assert.That(actual, Does.Contain("Test"));
         }
 
         #endregion

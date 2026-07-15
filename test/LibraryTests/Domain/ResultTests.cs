@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using Ucu.Poo.RunasDices.Domain;
 
@@ -38,7 +37,7 @@ namespace Ucu.Poo.RunasDices.Tests.Domain
                 Assert.That(actual.IsSuccess, Is.False);
                 Assert.That(actual.IsFailure, Is.True);
                 Assert.That(actual.Errors, Is.Not.Null);
-                Assert.That(actual.Errors, Does.Contain(errorMessage));
+                Assert.That(actual.Errors, Is.EqualTo(errorMessage));
             }
         }
     }
@@ -80,7 +79,7 @@ namespace Ucu.Poo.RunasDices.Tests.Domain
                 Assert.That(actual.IsSuccess, Is.False);
                 Assert.That(actual.IsFailure, Is.True);
                 Assert.That(actual.Errors, Is.Not.Null);
-                Assert.That(actual.Errors, Is.EquivalentTo(errors));
+                Assert.That(actual.Errors, Is.EqualTo(errors));
                 Assert.That(actual.Value, Is.Default);
             }
         }

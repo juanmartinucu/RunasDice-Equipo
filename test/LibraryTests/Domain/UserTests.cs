@@ -2,7 +2,7 @@ using System;
 using NUnit.Framework;
 using Ucu.Poo.RunasDices.Domain;
 
-namespace Ucu.Poo.RunasDices.Tests
+namespace Ucu.Poo.RunasDices.Tests.Domain
 {
     [TestFixture]
     public class UserTests

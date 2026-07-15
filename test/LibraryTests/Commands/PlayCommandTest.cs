@@ -108,7 +108,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
         public async Task ExecuteAsync_WithOpponentParameter_WhenGetDisplayNameThrowsArgumentException_SendsExceptionMessage()
         {
             // Arrange
-            
+
             // Configura el mock para que GetDisplayName dispare la excepción
             // ArgumentException con el mensaje a continuación.
             const string errorMessage = "Nombre de usuario inválido";
