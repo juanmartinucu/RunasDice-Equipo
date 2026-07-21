@@ -28,4 +28,15 @@ de la consigna:
 | [STORIES.md](./STORIES.md) | Funcionalidad del bot                    |
 | [BOT.md](./BOT.md)         | Cómo crear el bot de Telegram            |
 | [SEED.md](./SEED.md)       | Código provisto como punto de partida    |
-| [DIAGRAM.md](./DIAGRAM.md) | Diagrama de clasees de dominio provistas |
+| [DIAGRAM.md](./DIAGRAM.md) | Diagrama de clases de dominio provistas |
+
+Este repositorio, y en particular este documento, va a ir cambiando durante el
+curso: vamos a ir agregando información adicional sobre las sucesivas entregas.
+
+Para facilitar tu trabajo, no modifiques este archivo de aquí para arriba.
+
+⬆︎ No modifiques de aquí para arriba
+
+------------
+
+⬇︎ Haz tus modificaciones de aquí en adelante
