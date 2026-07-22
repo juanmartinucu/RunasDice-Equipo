@@ -4,9 +4,7 @@ width="150"/>
 
 # Universidad Católica del Uruguay
 
-## Facultad de Ingeniería y Tecnologías
-
-### Programación II
+## Programación II
 
 # Consigna proyecto 2026 2º semestre
 
