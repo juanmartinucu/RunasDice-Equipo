@@ -30,8 +30,19 @@ de la consigna:
 | [SEED.md](./SEED.md)       | Código provisto como punto de partida    |
 | [DIAGRAM.md](./DIAGRAM.md) | Diagrama de clases de dominio provistas |
 
-Este repositorio, y en particular este documento, va a ir cambiando durante el
-curso: vamos a ir agregando información adicional sobre las sucesivas entregas.
+> [!TIP]
+> No te preocupes si no entiendes algo de lo que está en este repositorio la
+> primera vez lo que leas. Incluye algunas cosas que iremos viendo durante el
+> curso y que los profesores te iremos explicando a medida que sea necesario.
+
+Este repositorio, y en particular este documento, va a ir cambiando a medida que
+progrese el curso: vamos a ir agregando información adicional sobre las
+sucesivas entregas, incluyendo fechas, rúbricas, etc.
+
+> [!IMPORTANT]
+> Vas a tener que crear el repositorio para tu proyecto mediante un *fork* de
+> este repositorio. Luego deberás configurar tu repositorio para poder
+> sincronizar cambios con este. No lo hagas hasta que te enseñemos a hacerlo.
 
 Para facilitar tu trabajo, no modifiques este archivo de aquí para arriba.
 
