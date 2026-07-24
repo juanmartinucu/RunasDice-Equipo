@@ -44,7 +44,7 @@ namespace Ucu.Poo.RunasDices.Domain
         /// Obtiene un valor que indica si el resultado es de fracaso o de
         /// éxito.
         /// </summary>
-        public bool IsFailure => !this.IsSuccess;
+        public bool IsFailure { get { return !this.IsSuccess; } }
 
         /// <summary>
         /// Obtiene el o los mensajes de errores si <see

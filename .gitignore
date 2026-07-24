@@ -104,6 +104,11 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# XML de documentación generada automáticamente
+src/**/Library.xml
+src/**/Program.xml
+test/**/LibraryTests.xml
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -152,6 +157,7 @@ _TeamCity*
 coverage*.json
 coverage*.xml
 coverage*.info
+lcov.info
 
 # Visual Studio code coverage results
 *.coverage
@@ -482,9 +488,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
-
-# Coverage files
-lcov.info
 
 # Doxygen generated files
 /docs/html/

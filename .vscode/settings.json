@@ -17,5 +17,6 @@
     "dotnet.defaultSolution": "RunasDices.sln",
     "github.copilot.enable": {
         "*": false
-    }
+    },
+    "githubPullRequests.codingAgent.codeLens": false,
 }
