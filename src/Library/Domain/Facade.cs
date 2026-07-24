@@ -175,10 +175,14 @@ namespace Ucu.Poo.RunasDices.Domain
         /// jugar.</returns>
         public IReadOnlyList<string> GetUsersWaitingForOpponent()
         {
-            return this.waitingList
-                .Select(user => user.UserName)
-                .ToList()
-                .AsReadOnly();
+            var userNames = new List<string>();
+
+            foreach (var user in this.waitingList)
+            {
+                userNames.Add(user.UserName);
+            }
+
+            return userNames.AsReadOnly();
         }
 
         /// <summary>
@@ -245,9 +249,15 @@ namespace Ucu.Poo.RunasDices.Domain
         // contrario.
         private bool InternalUserIsWaiting(string userName)
         {
-            return this.waitingList.Any(
-                user => user.UserName.Equals(
-                    userName, StringComparison.OrdinalIgnoreCase));
+            foreach (var user in this.waitingList)
+            {
+                if (user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
@@ -275,7 +285,7 @@ namespace Ucu.Poo.RunasDices.Domain
 
         /// <summary>El usuario está esperando para jugar.</summary>
         public static string UserIsWaiting(string userName) =>
-            $"El usuario '{userName}' e⁄stá esperando para jugar.";
+            $"El usuario '{userName}' está esperando para jugar.";
 
         /// <summary>El usuario puede jugar.</summary>
         public static string UserCanPlay(string userName) =>

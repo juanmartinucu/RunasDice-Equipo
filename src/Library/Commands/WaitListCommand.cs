@@ -38,7 +38,20 @@ namespace Ucu.Poo.RunasDices.Commands
             }
             else
             {
-                string users = string.Join(", ", usersWaiting.Select(user => $"'{user}'"));
+                string users = string.Empty;
+                bool first = true;
+
+                foreach (string user in usersWaiting)
+                {
+                    if (!first)
+                    {
+                        users += ", ";
+                    }
+
+                    users += "'" + user + "'";
+                    first = false;
+                }
+
                 await this.ReplyAsync(
                     WaitListCommandMessages.PlayersWaiting(users))
                     .ConfigureAwait(false);

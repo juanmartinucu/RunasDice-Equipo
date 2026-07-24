@@ -26,7 +26,10 @@ namespace Ucu.Poo.RunasDices.Domain
         /// <inheritdoc/>
         public User Find(string userName)
         {
-            return this.users.Find(u => u.UserName == userName);
+            return this.users.Find(u => string.Equals(
+                u.UserName,
+                userName,
+                System.StringComparison.OrdinalIgnoreCase));
         }
 
         /// <inheritdoc/>
