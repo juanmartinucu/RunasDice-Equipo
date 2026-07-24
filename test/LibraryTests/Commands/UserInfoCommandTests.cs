@@ -22,7 +22,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // Arrange: nada extra; GetSenderOrAliasDisplayName(parameters) devolverá SendingUser
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -44,7 +44,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // devolverá 'other' como "sender efectivo".
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync($"as:{otherUser}");
+            await this.CommandMock.Object.ExecuteAsync($"as:{otherUser}").ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -69,7 +69,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                 .Returns(false);
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync(unknownUser);
+            await this.CommandMock.Object.ExecuteAsync(unknownUser).ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -87,7 +87,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // Arrange: nada extra
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync("uno dos");
+            await this.CommandMock.Object.ExecuteAsync("uno dos").ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -106,7 +106,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
 
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync("as:uno as:dos");
+            await this.CommandMock.Object.ExecuteAsync("as:uno as:dos").ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())

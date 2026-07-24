@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Ucu.Poo.RunasDices.Domain;
 
-namespace Ucu.Poo.RunasDices.Tests.Domain
+namespace Ucu.Poo.RunasDices.Domain.Tests
 {
     [TestFixture]
     public class FacadeTests
@@ -172,6 +172,25 @@ namespace Ucu.Poo.RunasDices.Tests.Domain
                 Assert.That(actual.IsFailure, Is.True);
                 Assert.That(actual.Errors, Is.Not.Null);
                 Assert.That(actual.Errors, Is.EqualTo(FacadeMessages.UserAlreadyWaiting("Test")));
+            }
+        }
+
+        [Test]
+        public void AddUserToWaitingList_WithSameUserDifferentCasing_ReturnsFailureWithCanonicalMessage()
+        {
+            // Arrange
+            Facade facade = Facade.Instance;
+            facade.AddUserToWaitingList("Pepe");
+
+            // Act
+            Result actual = facade.AddUserToWaitingList("pepe");
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(actual.IsFailure, Is.True);
+                Assert.That(actual.Errors, Is.Not.Null);
+                Assert.That(actual.Errors, Is.EqualTo(FacadeMessages.UserAlreadyWaiting("Pepe")));
             }
         }
 

@@ -25,7 +25,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // Arrange: nada extra; GetSenderOrAliasDisplayName usará el usuario que envía el comando.
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -41,12 +41,35 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
         }
 
         [Test]
+        public async Task ExecuteAsync_WithoutParameters_WhenSenderIsAlreadyWaiting_SendsAlreadyWaitingMessage()
+        {
+            // Arrange
+            Facade.Instance.AddUserToWaitingList(SendingUser);
+
+            // Act
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Result<bool> waitingResult = Facade.Instance.UserIsWaiting(SendingUser);
+
+                Assert.That(waitingResult.IsSuccess, Is.True);
+                Assert.That(waitingResult.Value, Is.True);
+                Assert.That(this.Reply, Is.Not.Null);
+                Assert.That(
+                    this.Reply,
+                    Is.EqualTo(FacadeMessages.UserAlreadyWaiting(SendingUser)));
+            }
+        }
+
+        [Test]
         public async Task ExecuteAsync_WithMoreThanOneParameter_SendsUsageMessage()
         {
             // Arrange: nada extra
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync("uno dos");
+            await this.CommandMock.Object.ExecuteAsync("uno dos").ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -69,7 +92,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                 .Returns(opponentUser);
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync(opponentUser);
+            await this.CommandMock.Object.ExecuteAsync(opponentUser).ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -99,7 +122,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                 .Returns(opponentUser);
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync(opponentUser);
+            await this.CommandMock.Object.ExecuteAsync(opponentUser).ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -131,7 +154,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                 .Throws(new System.ArgumentException(errorMessage));
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync(opponentUser);
+            await this.CommandMock.Object.ExecuteAsync(opponentUser).ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -157,7 +180,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             // Arrange: nada extra, el mock de GetSenderOrAliasDisplayName ya usa Alias si existe.
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync($"as:{aliasUser}");
+            await this.CommandMock.Object.ExecuteAsync($"as:{aliasUser}").ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -191,7 +214,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
                 .Returns(opponentUser);
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync(input);
+            await this.CommandMock.Object.ExecuteAsync(input).ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())

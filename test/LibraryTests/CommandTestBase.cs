@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Discord;
 using Moq;
@@ -12,9 +13,9 @@ namespace Ucu.Poo.RunasDices.Tests
     {
         protected const string SendingUser = "user";
 
-        protected Mock<T> CommandMock;
+        protected Mock<T> CommandMock { get; private set; }
 
-        protected List<string> Replies;
+        protected IList<string> Replies { get; private set; }
 
         protected string Reply
         {

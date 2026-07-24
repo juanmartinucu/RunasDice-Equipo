@@ -22,7 +22,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             Facade facade = Facade.Instance;
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -43,7 +43,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             facade.AddUserToWaitingList("Test");
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -66,7 +66,7 @@ namespace Ucu.Poo.RunasDices.Tests.Commands
             facade.AddUserToWaitingList("Test3");
 
             // Act
-            await this.CommandMock.Object.ExecuteAsync();
+            await this.CommandMock.Object.ExecuteAsync().ConfigureAwait(false);
 
             // Assert
             using (Assert.EnterMultipleScope())

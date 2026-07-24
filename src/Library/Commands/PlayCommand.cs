@@ -48,10 +48,17 @@ namespace Ucu.Poo.RunasDices.Commands
                 {
                     userName = this.GetSenderOrAliasDisplayName(parameters);
 
-                    Facade.Instance.AddUserToWaitingList(userName);
-                    await this.ReplyAsync(
-                        PlayCommandMessages.UserAddedToWaitingList(userName))
-                        .ConfigureAwait(false);
+                    Result added = Facade.Instance.AddUserToWaitingList(userName);
+                    if (added.IsSuccess)
+                    {
+                        await this.ReplyAsync(
+                            PlayCommandMessages.UserAddedToWaitingList(userName))
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await this.ReplyAsync(added.Errors).ConfigureAwait(false);
+                    }
 
                     return;
                 }
@@ -72,9 +79,9 @@ namespace Ucu.Poo.RunasDices.Commands
                 userName = this.GetSenderOrAliasDisplayName(parameters);
                 string opponentName = this.GetDisplayName(opponentId);
 
-                Result<Game> result = Facade.Instance.StartGame(userName, opponentName);
+                Result<Game> started = Facade.Instance.StartGame(userName, opponentName);
 
-                if (result.IsSuccess)
+                if (started.IsSuccess)
                 {
                     await this.ReplyAsync(
                         PlayCommandMessages.GameStarted(opponentName))
@@ -82,7 +89,7 @@ namespace Ucu.Poo.RunasDices.Commands
                 }
                 else
                 {
-                    await this.ReplyAsync(result.Errors).ConfigureAwait(false);
+                    await this.ReplyAsync(started.Errors).ConfigureAwait(false);
                 }
             }
             catch (ArgumentException exception)
