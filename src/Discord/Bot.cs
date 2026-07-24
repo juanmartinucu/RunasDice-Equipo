@@ -176,7 +176,7 @@ namespace Ucu.Poo.RunasDices.Discord
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            var message = arg as SocketUserMessage;
+            SocketUserMessage message = arg as SocketUserMessage;
             if (message == null || message.Author.IsBot)
             {
                 return;

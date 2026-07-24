@@ -25,11 +25,11 @@ namespace Ucu.Poo.RunasDices.Discord
         /// <returns>Una tarea representando la ejecución del bot.</returns>
         public static async Task LoadAsync()
         {
-            var configuration = new ConfigurationBuilder()
+            IConfigurationRoot configuration = new ConfigurationBuilder()
                 .AddUserSecrets(Assembly.GetExecutingAssembly())
                 .Build();
 
-            var serviceProvider = new ServiceCollection()
+            ServiceProvider serviceProvider = new ServiceCollection()
                 .AddLogging(options =>
                 {
                     options.ClearProviders();
@@ -51,7 +51,7 @@ namespace Ucu.Poo.RunasDices.Discord
 
                 do
                 {
-                    var keyInfo = Console.ReadKey();
+                    ConsoleKeyInfo keyInfo = Console.ReadKey();
 
                     if (keyInfo.Key != ConsoleKey.Q)
                     {
