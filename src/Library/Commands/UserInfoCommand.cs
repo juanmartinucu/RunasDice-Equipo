@@ -67,7 +67,7 @@ namespace Ucu.Poo.RunasDices.Commands
 
                 string userName = this.GetSenderOrAliasDisplayName(parameters);
 
-                var result = Facade.Instance.GetUserInfo(userName);
+                string result = Facade.Instance.GetUserInfo(userName);
                 await this.ReplyAsync(result).ConfigureAwait(false);
             }
             catch (InvalidOperationException exception)
