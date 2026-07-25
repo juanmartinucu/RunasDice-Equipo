@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD060 -->
 <!-- markdownlint-disable-next-line MD033 MD041 -->
 <img alt="UCU" src="https://www.ucu.edu.uy/plantillas/images/logo_ucu.svg"
 width="150"/>
@@ -26,7 +27,8 @@ de la consigna:
 | [STORIES.md](./STORIES.md) | Funcionalidad del bot                    |
 | [BOT.md](./BOT.md)         | Cómo crear el bot de Telegram            |
 | [SEED.md](./SEED.md)       | Código provisto como punto de partida    |
-| [DIAGRAM.md](./DIAGRAM.md) | Diagrama de clases de dominio provistas |
+| [DIAGRAM.md](./DIAGRAM.md) | Diagrama de clases de dominio provistas  |
+| [COPILOT.MD](./COPILOT.md) | ![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-000?logo=githubcopilot&logoColor=fff) Cómo usarlo para para aprender |
 
 > [!TIP]
 > No te preocupes si no entiendes algo de lo que está en este repositorio la

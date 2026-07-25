@@ -7,11 +7,13 @@
     <IsTestProject>true</IsTestProject>
     <RootNamespace>UUcu.Poo.RunasDices.Tests</RootNamespace>
   </PropertyGroup>
+
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>All</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\Library\Library.csproj" />
     <ProjectReference Include="..\..\src\Discord\Discord.csproj" />

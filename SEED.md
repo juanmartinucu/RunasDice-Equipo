@@ -9,6 +9,7 @@
 <!-- cSpell:ignore Façade façade -->
 
 * [Código provisto](#código-provisto)
+  * [Convenciones de código](#convenciones-de-código)
   * [Façade vs Bot](#façade-vs-bot)
   * [Comandos del bot](#comandos-del-bot)
   * [Otras clases](#otras-clases)
@@ -21,17 +22,89 @@
 Este repositorio no sólo contiene la consigna del proyecto, sino un código
 "semilla" para que hagas crecer tus propias entregas a partir de él.
 
-El código provisto:
+¿Qué hay en este repositorio?
 
-* Implementa las [historias de usuario](./STORIES.md) 1, 2, 3 y 4.
+1. Un proyecto de biblioteca (creado con [`dotnet new classlib --name
+   Library`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore22))
+   en la carpeta `src/Library`. El código en este proyecto está separado en
+   carpetas como `./src/Library/Commands`, `./src/Library/Domain`. Con ese
+   código se implementan las [historias de usuario](./STORIES.md) 1, 2, 3 y 4.
 
-* Muestra cómo implementar un bot de Discord en C# utilizando un patrón llamado
-  [Façade](https://refactoring.guru/design-patterns/facade).
+2. Un proyecto de aplicación de consola, creado con [`dotnet new console --name
+   Program`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore22),
+   en la carpeta `src/Program`. En ese proyecto está la implementación del bot
+   de Discord en C# utilizando un patrón llamado
+   [Façade](https://refactoring.guru/design-patterns/facade).
+
+3. Un proyecto de prueba en [NUnit](https://nunit.org/), creado con [`dotnet new
+   nunit --name
+   LibraryTests`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore22),
+   en la carpeta `test\LibraryTests`. Ese proyecto de prueba incluye casos de
+   prueba para todas las clases provistas.
+
+4. Un proyecto de [Doxygen](https://www.doxygen.nl/index.html) para generación
+   de sitio web de documentación en la carpeta `docs`.
+
+5. Análisis estático con [Roslyn
+   analyzers](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview)
+   en los proyectos de biblioteca y de aplicación.
+
+6. Análisis de estilo con
+   [StyleCop](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/README.md)
+   en los proyectos de biblioteca y de aplicación.
+
+7. Una solución `RunasAndDices.sln` que referencia todos los proyectos de C# y
+   facilita la compilación con [`dotnet
+   build`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build).
+
+8. Tareas pre-configuradas para ejecutar las pruebas con cobertura y generar
+   documentación desde VSCode en la carpeta `.vscode`.
+
+9. Análisis de cobertura de los casos de prueba mediante los indicadores que
+   aparecen en los márgenes con el complemento de Visual Studio Code [Coverage
+   Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters).
+
+10. Ejecución automática de compilación y prueba mediante [GitHub
+    Actions](https://docs.github.com/en/actions) configuradas en el repositorio
+    al hacer [push](https://github.com/git-guides/git-push) o [pull
+    request](https://docs.github.com/en/github/collaborating-with-pull-requests).
 
 > [!IMPORTANT]
 > Pueden ver que es posible programar toda la funcionalidad pedida en la
 > *façade* sin preocuparse por el bot de Discord y agregar al final la
 > funcionalidad del bot sin modificaciones a la *façade* en la ultima entrega.
+
+## Convenciones de código
+
+[Convenciones de código en
+C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)
+
+[Convenciones de nombres en
+C#](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines)
+
+[C# Compiler Errors
+(CS*)](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/)
+
+[Roslyn Analyzer Warnings
+(CA*)](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/categories)
+
+[StyleCop Analyzer Warnings
+(SA*)](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)
+
+Las violaciones a estas convenciones son reportadas como *warnings* al compilar.
+Aunque recomendamos corregir las violaciones, es posible omitir esta
+configuración de la siguiente forma:
+
+Comentar las siguientes líneas en los archivos de proyecto (`*.csproj`)
+
+```xml
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>All</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+```
+
+Comentar la línea `<PackageReference Include="StyleCop.Analyzers"
+Version="1.1.118"/>` en los archivos de proyecto (`*.csproj`)
 
 ## Façade vs Bot
 

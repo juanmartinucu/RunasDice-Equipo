@@ -6,7 +6,8 @@
     <LangVersion>6</LangVersion>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-<PropertyGroup>
+
+  <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
@@ -14,9 +15,11 @@
     <AnalysisMode>All</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="../../.analyzers/stylecop.json" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj" />
     <ProjectReference Include="..\Discord\Discord.csproj" />
