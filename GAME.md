@@ -1,4 +1,4 @@
-# Consigna proyecto 2026 2º semestre: juego `Dunas & Dices` <!-- omit in toc -->
+# Consigna proyecto 2026 2º semestre: juego `Runas & Dices` <!-- omit in toc -->
 
 <!-- markdownlint-disable-next-line MD033 -->
 <img alt="Logo" src="./assets/Runas_and_Dices.png" width="500">
