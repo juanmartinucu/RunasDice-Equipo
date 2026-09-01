@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Modelo de dominio - Runas &amp; Dices</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm; }
+    :root { --ink:#1e293b; --muted:#64748b; --blue:#2563eb; --blue-soft:#eff6ff; --violet:#7c3aed; --violet-soft:#f5f3ff; --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb; --line:#dbe3ee; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); font-family:Arial, Helvetica, sans-serif; font-size:10.5pt; line-height:1.42; }
+    h1 { font-size:30pt; line-height:1.05; margin:0 0 8px; color:#0f172a; }
+    h2 { font-size:18pt; margin:24px 0 10px; color:#0f172a; border-bottom:2px solid var(--blue); padding-bottom:5px; }
+    h3 { font-size:12.5pt; margin:15px 0 5px; color:#1d4ed8; }
+    p { margin:6px 0 10px; }
+    .cover { min-height:245mm; display:flex; flex-direction:column; justify-content:center; padding:20mm 12mm; background:linear-gradient(135deg,#eff6ff 0%,#fff 62%); border:1px solid #bfdbfe; border-radius:16px; }
+    .cover img { width:270px; margin-bottom:22px; }
+    .eyebrow { text-transform:uppercase; letter-spacing:2px; color:var(--blue); font-weight:bold; font-size:9pt; }
+    .subtitle { color:var(--muted); font-size:14pt; max-width:570px; }
+    .pill { display:inline-block; padding:5px 10px; border-radius:999px; background:#dbeafe; color:#1e40af; font-weight:bold; margin:5px 4px 0 0; }
+    .page-break { page-break-before:always; }
+    .intro-grid, .layer-grid, .cards-grid { display:grid; gap:10px; }
+    .intro-grid { grid-template-columns:repeat(3,1fr); }
+    .layer-grid { grid-template-columns:repeat(4,1fr); align-items:stretch; }
+    .cards-grid { grid-template-columns:repeat(2,1fr); }
+    .box { border:1px solid var(--line); border-radius:10px; padding:11px; background:#fff; break-inside:avoid; }
+    .box h3 { margin-top:0; }
+    .blue { background:var(--blue-soft); border-color:#bfdbfe; }
+    .violet { background:var(--violet-soft); border-color:#ddd6fe; }
+    .green { background:var(--green-soft); border-color:#bbf7d0; }
+    .amber { background:var(--amber-soft); border-color:#fde68a; }
+    .layer { text-align:center; min-height:78px; display:flex; flex-direction:column; justify-content:center; }
+    .arrow { text-align:center; color:var(--blue); font-size:20pt; font-weight:bold; margin:-3px 0; }
+    code { font-family:Consolas, monospace; font-size:.92em; color:#0f172a; }
+    ul { margin:5px 0 3px 18px; padding:0; }
+    li { margin:2px 0; }
+    table { width:100%; border-collapse:collapse; margin:8px 0 15px; font-size:9pt; break-inside:avoid; }
+    th { text-align:left; background:#1e3a8a; color:white; padding:7px; }
+    td { vertical-align:top; border:1px solid var(--line); padding:7px; }
+    tr:nth-child(even) td { background:#f8fafc; }
+    .class-name { font-weight:bold; color:#1d4ed8; white-space:nowrap; }
+    .tag { display:inline-block; font-size:8pt; color:#475569; background:#e2e8f0; border-radius:4px; padding:2px 5px; margin:1px; }
+    .note { border-left:4px solid var(--violet); background:#faf5ff; padding:10px 12px; margin:10px 0; }
+    .footer { color:var(--muted); font-size:8pt; border-top:1px solid var(--line); margin-top:18px; padding-top:6px; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="eyebrow">Programación II · Proyecto 2026</div>
+    <img src="../assets/Runas_and_Dices.png" alt="Runas &amp; Dices">
+    <h1>Modelo de dominio</h1>
+    <p class="subtitle">Diseño de clases para implementar el juego por etapas, aplicando Expert, SRP, alta cohesión y bajo acoplamiento.</p>
+    <div><span class="pill">Diagrama</span><span class="pill">Responsabilidades</span><span class="pill">Colaboraciones</span><span class="pill">Historias de usuario</span></div>
+  </section>
+
+  <section class="page-break">
+    <h2>1. Vista general de la solución</h2>
+    <p>El bot y los comandos no conocen las reglas internas. La solicitud atraviesa la fachada y llega a entidades y servicios del dominio.</p>
+    <div class="layer-grid">
+      <div class="box layer blue"><b>Discord / Commands</b><small>Reciben mensajes</small></div>
+      <div class="box layer violet"><b>Facade</b><small>Expone casos de uso</small></div>
+      <div class="box layer green"><b>Servicios de dominio</b><small>Coordinan operaciones</small></div>
+      <div class="box layer amber"><b>Entidades</b><small>Conservan reglas y estado</small></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="intro-grid">
+      <div class="box blue"><h3>Entrada</h3><p>Comandos como jugar una carta, atacar o terminar el turno.</p></div>
+      <div class="box violet"><h3>Coordinación</h3><p><code>Facade</code> valida el caso de uso y devuelve <code>Result</code>.</p></div>
+      <div class="box green"><h3>Reglas</h3><p>Servicios y entidades aplican las reglas sin depender de Discord.</p></div>
+    </div>
+
+    <h2>2. Diagrama visual de relaciones</h2>
+    <div class="box blue">
+      <h3>Partida</h3>
+      <p><code>Game</code> contiene exactamente dos <code>Player</code>. Cada jugador administra sus zonas y sus recursos.</p>
+      <div class="intro-grid">
+        <div class="box"><h3>Player</h3><p><code>Life</code> · <code>Ether</code> · <code>User</code></p><p>↓ posee</p><p><code>Deck</code> · <code>Hand</code> · <code>Board</code> · <code>Graveyard</code></p></div>
+        <div class="box"><h3>Board</h3><p>Contiene <code>Creature</code> y <code>Upgrade</code>.</p><p>Las criaturas tienen habilidades y mejoras equipadas.</p></div>
+        <div class="box"><h3>Game</h3><p><code>ActivePlayer</code> · <code>DefenderPlayer</code> · <code>GamePhase</code> · <code>GameState</code></p></div>
+      </div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="intro-grid">
+      <div class="box violet"><h3>CardPlayService</h3><p>Valida costos, fase, pertenencia y objetivo al jugar cartas.</p></div>
+      <div class="box violet"><h3>CombatResolver</h3><p>Calcula valores efectivos, bloqueos, daño y destrucciones.</p></div>
+      <div class="box violet"><h3>TurnService</h3><p>Coordina las fases de inicio, robo y finalización del turno.</p></div>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>3. Fichas de clases: entidades y zonas</h2>
+    <table><thead><tr><th>Clase</th><th>Responsabilidad</th><th>Razón de cambio</th><th>Coopera con</th></tr></thead><tbody>
+      <tr><td class="class-name">User</td><td>Identifica al usuario de la aplicación mediante <code>UserName</code>.</td><td>Cambios en la identidad del usuario.</td><td><code>UsersRepository</code>, <code>Player</code></td></tr>
+      <tr><td class="class-name">Player</td><td>Mantiene vida, Ether y las zonas propias. Puede recibir daño, curarse, gastar Ether, robar y descartar.</td><td>Cambios en las reglas del estado individual del jugador.</td><td><code>User</code>, zonas, <code>Game</code>, efectos</td></tr>
+      <tr><td class="class-name">Game</td><td>Representa la partida, sus dos jugadores, la fase, el turno, el estado y el ganador.</td><td>Cambios en el ciclo de vida de la partida.</td><td><code>Player</code>, <code>TurnService</code>, <code>CombatResolver</code></td></tr>
+      <tr><td class="class-name">Deck</td><td>Conserva el orden de las cartas, baraja y entrega la carta superior.</td><td>Cambios en las reglas del mazo o del robo.</td><td><code>Player</code>, <code>Card</code></td></tr>
+      <tr><td class="class-name">Hand</td><td>Administra las cartas disponibles para jugar o descartar.</td><td>Cambios en las reglas de la mano y su límite.</td><td><code>Player</code>, <code>Card</code></td></tr>
+      <tr><td class="class-name">Board</td><td>Conserva las cartas permanentes actualmente en juego y permite buscar criaturas y mejoras.</td><td>Cambios en las reglas del campo.</td><td><code>Creature</code>, <code>Upgrade</code>, <code>Player</code></td></tr>
+      <tr><td class="class-name">Graveyard</td><td>Conserva cartas usadas, descartadas o destruidas.</td><td>Cambios en las reglas del cementerio.</td><td><code>Player</code>, <code>Card</code></td></tr>
+    </tbody></table>
+
+    <h2>4. Fichas de clases: cartas y efectos</h2>
+    <table><thead><tr><th>Clase</th><th>Responsabilidad</th><th>Razón de cambio</th><th>Coopera con</th></tr></thead><tbody>
+      <tr><td class="class-name">Card</td><td>Define los datos comunes: nombre, costo y descripción.</td><td>Cambios en las propiedades compartidas por todas las cartas.</td><td><code>Creature</code>, <code>Spell</code>, <code>Upgrade</code></td></tr>
+      <tr><td class="class-name">Creature</td><td>Mantiene ataque, defensa, habilidades y mejoras equipadas; calcula sus estadísticas modificadas.</td><td>Cambios en las reglas propias de criaturas.</td><td><code>Ability</code>, <code>Upgrade</code>, <code>CombatResolver</code></td></tr>
+      <tr><td class="class-name">Spell</td><td>Representa un efecto inmediato y conserva los efectos que debe resolver.</td><td>Cambios en las reglas de hechizos.</td><td><code>Effect</code>, <code>EffectResolver</code>, <code>Dice</code></td></tr>
+      <tr><td class="class-name">Upgrade</td><td>Valida su objetivo y modifica a una criatura o a un jugador mientras permanece activa.</td><td>Cambios en las reglas de equipamiento y mejoras.</td><td><code>Creature</code>, <code>Player</code>, <code>Effect</code></td></tr>
+      <tr><td class="class-name">Ability</td><td>Asocia un disparador, como <code>OnAttack</code>, con un efecto.</td><td>Cambios en las reglas de activación de habilidades.</td><td><code>Creature</code>, <code>Upgrade</code>, <code>Effect</code></td></tr>
+      <tr><td class="class-name">Effect</td><td>Contrato para aplicar una modificación concreta al juego.</td><td>Cambios en una regla de efecto específica.</td><td><code>Game</code>, <code>Player</code>, <code>Creature</code></td></tr>
+    </tbody></table>
+    <div class="note"><b>Polimorfismo:</b> <code>Creature</code>, <code>Spell</code> y <code>Upgrade</code> heredan de <code>Card</code>. Los efectos concretos, como daño, curación o robo, implementan <code>Effect</code> y no se concentran en una clase gigante.</div>
+  </section>
+
+  <section class="page-break">
+    <h2>5. Fichas de clases: dados, turnos y combate</h2>
+    <table><thead><tr><th>Clase</th><th>Responsabilidad</th><th>Razón de cambio</th><th>Coopera con</th></tr></thead><tbody>
+      <tr><td class="class-name">IDice</td><td>Define la operación común <code>Roll()</code>.</td><td>Cambios en la abstracción de lanzamiento.</td><td>Dados concretos, <code>CombatResolver</code>, <code>EffectResolver</code></td></tr>
+      <tr><td class="class-name">StandardNumericDice</td><td>Produce valores del dado numérico estándar.</td><td>Cambios en sus caras o distribución.</td><td><code>DiceResult</code></td></tr>
+      <tr><td class="class-name">PowerDice / RiskDice</td><td>Producen resultados especializados para ataques potentes o variables.</td><td>Cambios en ese tipo de dado.</td><td><code>Ability</code>, <code>CombatResolver</code></td></tr>
+      <tr><td class="class-name">HealingDice / RuneDice</td><td>Producen resultados de curación, protección o símbolos rúnicos.</td><td>Cambios en resultados de soporte o runas.</td><td><code>Spell</code>, <code>EffectResolver</code></td></tr>
+      <tr><td class="class-name">DiceResult</td><td>Representa un resultado numérico, una runa o un efecto adicional.</td><td>Cambios en la representación de resultados.</td><td><code>IDice</code>, <code>EffectResolver</code></td></tr>
+      <tr><td class="class-name">Attack</td><td>Representa una criatura atacante y, opcionalmente, su bloqueadora.</td><td>Cambios en los datos de una declaración de ataque.</td><td><code>Creature</code>, <code>CombatResolver</code></td></tr>
+      <tr><td class="class-name">CombatResolver</td><td>Resuelve ataques, dados, bloqueos, comparación de estadísticas, daño y destrucción.</td><td>Cambios en las reglas de combate.</td><td><code>Attack</code>, <code>Creature</code>, <code>Player</code>, <code>IDice</code></td></tr>
+      <tr><td class="class-name">CardPlayService</td><td>Valida y coordina el juego de una carta y su movimiento entre zonas.</td><td>Cambios en las reglas para jugar cartas.</td><td><code>Game</code>, <code>Player</code>, cartas, <code>EffectResolver</code></td></tr>
+      <tr><td class="class-name">EffectResolver</td><td>Ejecuta efectos y procesa resultados de dados.</td><td>Cambios en la coordinación o secuencia de efectos.</td><td><code>Effect</code>, <code>IDice</code>, <code>Game</code></td></tr>
+      <tr><td class="class-name">TurnService</td><td>Coordina las fases de inicio, robo, principal, combate y final.</td><td>Cambios en las reglas de las fases.</td><td><code>Game</code>, <code>Player</code>, <code>EffectResolver</code></td></tr>
+    </tbody></table>
+
+    <h2>6. Expert y SRP en decisiones concretas</h2>
+    <div class="cards-grid">
+      <div class="box green"><h3>Expert</h3><ul><li><code>Player</code> modifica su propia vida y Ether.</li><li><code>Deck</code> roba porque conoce el orden de sus cartas.</li><li><code>Creature</code> calcula sus estadísticas porque conoce sus bases y mejoras.</li><li><code>Game</code> cambia el jugador activo porque conoce a los participantes.</li><li><code>CombatResolver</code> compara ataque y defensa porque necesita dos criaturas.</li></ul></div>
+      <div class="box violet"><h3>SRP</h3><ul><li>Si cambia el combate, cambia <code>CombatResolver</code>.</li><li>Si cambia un hechizo, cambia su <code>Effect</code>.</li><li>Si cambia un dado, cambia ese tipo de dado.</li><li>Si cambia el límite de mano, cambia <code>Hand</code> o la regla de fin de turno.</li><li><code>Game</code> no calcula daño ni interpreta cartas.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>7. Secuencias de colaboración</h2>
+    <h3>Inicio de partida</h3>
+    <p><span class="tag">Facade</span> → <span class="tag">UsersRepository</span> → <span class="tag">User</span> → <span class="tag">Player</span> → <span class="tag">Game</span> → preparación de <span class="tag">Deck</span> y <span class="tag">Hand</span>.</p>
+    <h3>Jugar una carta</h3>
+    <p><span class="tag">Facade</span> → <span class="tag">CardPlayService</span> valida fase, jugador, carta, costo y objetivo → <span class="tag">Player</span> paga Ether → la carta cambia de zona → <span class="tag">EffectResolver</span> ejecuta sus efectos.</p>
+    <h3>Combate</h3>
+    <p><span class="tag">Game</span> identifica los roles → se crean <span class="tag">Attack</span> → <span class="tag">CombatResolver</span> lanza <span class="tag">IDice</span> → calcula valores efectivos → aplica daño o destruye criaturas → <span class="tag">Game</span> verifica el final.</p>
+    <h3>Correspondencia con historias</h3>
+    <table><thead><tr><th>Historias</th><th>Clases centrales</th><th>Resultado</th></tr></thead><tbody>
+      <tr><td>1 a 4</td><td><code>Facade</code>, <code>User</code>, <code>UsersRepository</code>, <code>Result</code></td><td>Usuarios, lista de espera y emparejamiento.</td></tr>
+      <tr><td>5 a 6</td><td><code>Game</code>, <code>Player</code>, <code>Deck</code>, <code>Hand</code>, <code>TurnService</code></td><td>Preparación e inicio de turnos.</td></tr>
+      <tr><td>7 a 8</td><td><code>CardPlayService</code>, cartas, <code>EffectResolver</code>, dados</td><td>Jugar cartas, pagar Ether y resolver efectos.</td></tr>
+      <tr><td>9 a 11</td><td><code>Attack</code>, <code>CombatResolver</code>, <code>Creature</code>, dados</td><td>Declarar bloqueos y resolver combate.</td></tr>
+      <tr><td>12 a 13</td><td><code>TurnService</code>, <code>Hand</code>, <code>Graveyard</code>, <code>Game</code></td><td>Finalizar turnos y partidas.</td></tr>
+    </tbody></table>
+    <div class="footer">Runas &amp; Dices · Modelo de dominio · Documento complementario a DIAGRAM.md</div>
+  </section>
+</body>
+</html>
